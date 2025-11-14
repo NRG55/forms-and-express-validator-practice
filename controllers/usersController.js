@@ -4,19 +4,27 @@ const { body, validationResult, matchedData } = require("express-validator")
 const alphaErr = "must only contain letters.";
 const lengthErr = "must be between 1 and 10 characters.";
 const emailErr = "must be valid (example: username@domain.com)";
+const numericErr = "must only contain numbers";
+const ageRangeError = "must be age between 18 and 120";
 
 const validateUser = [
     body("firstName")
         .trim()
         .isAlpha().withMessage(`First name ${alphaErr}`)
-        .isLength({ min:1, max:10 }).withMessage(`First name ${lengthErr}`),
+        .isLength({ min: 1, max: 10 }).withMessage(`First name ${lengthErr}`),
     body("lastName")
         .trim()
         .isAlpha().withMessage(`Last name ${alphaErr}`)
         .isLength({ min: 1, max: 10 }).withMessage(`Last name ${lengthErr}`),
     body("email")
         .trim()
-        .isEmail().withMessage(`Email ${emailErr}`)        
+        .isEmail().withMessage(`Email ${emailErr}`),
+    body("age")
+        .optional({ values: "falsy" })
+        .trim()
+        .isNumeric().withMessage(`Age ${numericErr}`)
+        .isInt({ min: 18, max: 120 }).withMessage(`Age ${ageRangeError}`),
+
 ];
 
 exports.usersCreateGet = (req, res) => {
@@ -35,8 +43,8 @@ exports.usersCreatePost = [
                 errors: errors.array(),
             });
         }
-        const { firstName, lastName, email } = matchedData(req);
-        usersStorage.addUser({ firstName, lastName, email });
+        const { firstName, lastName, email, age } = matchedData(req);
+        usersStorage.addUser({ firstName, lastName, email, age });
         res.redirect("/");
     }
 ];
@@ -61,8 +69,8 @@ exports.usersUpdatePost = [
                 errors: errors.array(),
             });
         };
-        const { firstName, lastName, email } = matchedData(req);
-        usersStorage.updateUser(req.params.id, { firstName, lastName, email });
+        const { firstName, lastName, email, age } = matchedData(req);
+        usersStorage.updateUser(req.params.id, { firstName, lastName, email, age });
         res.redirect("/");
     }
 ];
