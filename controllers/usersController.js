@@ -2,20 +2,21 @@ const usersStorage = require("../storages/usersStorage");
 const { body, validationResult, matchedData } = require("express-validator")
 
 const alphaErr = "must only contain letters.";
-const lengthErr = "must be between 1 and 10 characters.";
+const lengthNameErr = "must be between 1 and 10 characters.";
 const emailErr = "must be valid (example: username@domain.com)";
 const numericErr = "must only contain numbers";
-const ageRangeError = "must be age between 18 and 120";
+const rangeAgeError = "must be age between 18 and 120";
+const lengthBioError = "must be maximum 200 characters";
 
 const validateUser = [
     body("firstName")
         .trim()
         .isAlpha().withMessage(`First name ${alphaErr}`)
-        .isLength({ min: 1, max: 10 }).withMessage(`First name ${lengthErr}`),
+        .isLength({ min: 1, max: 10 }).withMessage(`First name ${lengthNameErr}`),
     body("lastName")
         .trim()
         .isAlpha().withMessage(`Last name ${alphaErr}`)
-        .isLength({ min: 1, max: 10 }).withMessage(`Last name ${lengthErr}`),
+        .isLength({ min: 1, max: 10 }).withMessage(`Last name ${lengthNameErr}`),
     body("email")
         .trim()
         .isEmail().withMessage(`Email ${emailErr}`),
@@ -23,8 +24,11 @@ const validateUser = [
         .optional({ values: "falsy" })
         .trim()
         .isNumeric().withMessage(`Age ${numericErr}`)
-        .isInt({ min: 18, max: 120 }).withMessage(`Age ${ageRangeError}`),
-
+        .isInt({ min: 18, max: 120 }).withMessage(`Age ${rangeAgeError}`),
+    body("bio")
+        .optional({ values: "falsy" })
+        .trim()
+        .isLength({ max: 200 }).withMessage(`Bio ${lengthBioError}`)
 ];
 
 exports.usersCreateGet = (req, res) => {
@@ -43,8 +47,8 @@ exports.usersCreatePost = [
                 errors: errors.array(),
             });
         }
-        const { firstName, lastName, email, age } = matchedData(req);
-        usersStorage.addUser({ firstName, lastName, email, age });
+        const { firstName, lastName, email, age, bio } = matchedData(req);
+        usersStorage.addUser({ firstName, lastName, email, age, bio });
         res.redirect("/");
     }
 ];
@@ -69,8 +73,8 @@ exports.usersUpdatePost = [
                 errors: errors.array(),
             });
         };
-        const { firstName, lastName, email, age } = matchedData(req);
-        usersStorage.updateUser(req.params.id, { firstName, lastName, email, age });
+        const { firstName, lastName, email, age, bio } = matchedData(req);
+        usersStorage.updateUser(req.params.id, { firstName, lastName, email, age, bio });
         res.redirect("/");
     }
 ];
