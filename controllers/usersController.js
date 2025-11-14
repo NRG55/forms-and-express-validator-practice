@@ -59,7 +59,12 @@ exports.usersUpdatePost = [
         usersStorage.updateUser(req.params.id, { firstName, lastName });
         res.redirect("/");
     }
-]
+];
+
+exports.usersDeletePost = (req, res) => {
+    usersStorage.deleteUser(req.params.id);
+    res.redirect("/");
+};
 
 exports.usersListGet = (req, res) => {
     res.render("index", {
@@ -68,10 +73,3 @@ exports.usersListGet = (req, res) => {
     });
 };
 
-
-
-// exports.usersCreatePost = (req, res) => {
-//     const { firstName, lastName } = req.body;
-//     usersStorage.addUser({ firstName, lastName });
-//     res.redirect("/");
-// };

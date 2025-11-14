@@ -24,7 +24,7 @@ class UsersStorage {
         this.storage[id] = { id, firstName, lastName };
     };
 
-    feleteUser(id) {
+    deleteUser(id) {
         delete this.storage[id];
     };
 }
