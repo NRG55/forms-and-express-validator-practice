@@ -2,9 +2,7 @@
 <head>   
     <title><%= title %></title>
 </head>
-<body>
-    <a href="/create">Create a user</a> 
-    <a href="/searchForm">User search</a>  
+<body>    
     <h1><%= title %></h1>
     <ul>
         <% if (locals.users) { %>
@@ -20,6 +18,6 @@
             <% }); %>
         <% }; %>
     </ul>
-      
+    <a href="/">Back to home</a>  
 </body>
 </html>

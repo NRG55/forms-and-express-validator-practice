@@ -91,3 +91,30 @@ exports.usersListGet = (req, res) => {
     });
 };
 
+exports.searchFormGet = (req, res) => {
+    res.render("searchForm", {
+        title: "Search for a user",
+    });
+};
+
+exports.usersSearchGet = (req, res) => {
+    const userName = req.query.name;
+    const userEmail = req.query.email;
+    const allUsers = usersStorage.getUsers();
+    const searchResult = [];
+
+    allUsers.forEach((user) => {
+        const userFullName = (user.firstName + " " + user.lastName).toLowerCase();
+
+        if (userFullName.includes(userName.toLowerCase()) 
+           || user.email.includes(userEmail.toLowerCase())) {
+            searchResult.push(user);
+        };
+    });
+
+    res.render("search", {
+        title: "Search result",
+        users: searchResult,
+    });
+};
+
